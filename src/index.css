@@ -1,1 +1,72 @@
 @import "tailwindcss";
+
+@theme {
+  --color-bg-page: #0B0D10;
+  --color-bg-panel: #14171C;
+  --color-bg-card: #191D24;
+  --color-border: #262B33;
+  --color-text-primary: #E6E8EB;
+  --color-text-secondary: #9AA3AD;
+  --color-text-meta: #6B7280;
+  --color-accent: #58A6FF;
+  --color-accent-green: #3FB950;
+  --color-accent-orange: #D29922;
+  --color-accent-purple: #A371F7;
+  --color-accent-pink: #F778BA;
+  --color-accent-yellow: #E3B341;
+  --color-accent-teal: #39D2C0;
+  --color-accent-red: #F85149;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #262B33 transparent;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #262B33; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3A4049; }
+
+.overline {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9AA3AD;
+}
+
+.quality-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #262B33;
+}
+.quality-dot.active {
+  background: #58A6FF;
+}
+
+.backdrop-blur-modal {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+.float-anim {
+  animation: float 3s ease-in-out infinite;
+}
