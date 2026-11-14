@@ -1,0 +1,74 @@
+# ПРОМПТ‑ТЗ: платформа «NeuroDifference» — энциклопедия фармалогии, соединений и исследований
+
+## 0. Бренд и нейминг
+- Название продукта: **NeuroDifference** (пишется слитно в лого, коде, домене и системных строках; читается как «Neuro Difference»). Домены‑кандидаты: neurodifference.com, neurodiff.io, ndiff.app.
+- Логотип: марк — стилизованный синапс/искра (два узла, соединённых разрядом) в акцентном синем `#58A6FF` или градиенте синий→зелёный; логотип‑текст — Inter SemiBold: «Neuro» белым + «Difference» акцентным (либо целиком белым с акцентной точкой после). Favicon — марк без текста.
+- Сайдбар: марк + «NeuroDifference» + строка версии и счётчиков: «v2.4.0 — N compounds, N studies».
+- Tagline (footer, meta, OG): «evidence · compounds · pathways».
+- Системные тексты: title страниц «… — NeuroDifference»; email‑sender «NeuroDifference <no-reply@neurodifference…>»; собственные бренд‑позиции в магазине с лейблом «NeuroDifference …» (например, «NeuroDifference 9‑Me‑BC»); шапка сообщества «NeuroDifference community».
+- В футере каждой страницы: дисклеймер «NeuroDifference is an information resource, not medical advice».
+
+## 1. Суть продукта
+Единая тёмная веб‑платформа, объединяющая: библиотеку научных исследований (источник — PubMed), справочник соединений с механизмами действия и уровнями доказательности, интерактивную карту «цель ↔ соединение ↔ путь», 3D‑атлас мозга с рецепторами, обучающие курсы со skill‑tree и квизами, личную markdown‑базу заметок, живой поиск по PubMed с модерацией пополнения библиотеки и магазин research‑соединений с вариантами фасовки и группами доставки. Tone of voice: научно‑доказательный; у каждого соединения явно указан статус доказательности: `human` / `preclinical / limited`.
+
+## 2. Рекомендуемый стек
+Next.js 14+ (App Router) + TypeScript; Tailwind CSS; Zustand + TanStack Query; PostgreSQL + Prisma; Meilisearch (фасетный поиск); D3 (bipartite/Sankey‑граф карты); react‑three‑fiber (3D‑мозг); CodeMirror 6 + markdown‑it (заметки, wiki‑links); NextAuth; Stripe (checkout, email‑подтверждение и трекинг); админка для модерации.
+
+## 3. Дизайн‑система (тёмная тема)
+- Фон страницы `#0B0D10`, панели `#14171C`, карточки `#191D24`, границы 1px `#262B33`, скругления 10–12px.
+- Текст: основной `#E6E8EB`, вторичный `#9AA3AD`, мета `#6B7280`.
+- Акценты: синий `#58A6FF` (ссылки, активные пункты, кнопки, логотип), зелёный `#3FB950` (бейдж human), оранжевый `#D29922` (preclinical/limited), доп. цвета для графов: фиолетовый, розовый, жёлтый, бирюзовый.
+- Шрифт Inter/system; оверлайны‑заголовки — CAPS 10–11px, letter‑spacing .06em; цифры‑счётчики моноширинные.
+- Компоненты: карточка, chip/tag, badge со счётчиком, «quality dots» (1–5 синих точек), icon‑button, сегментированные табы, модалка с backdrop‑blur, правый рельс фильтров, сайдбар 220–240px.
+
+## 4. Каркас интерфейса
+- Левый сайдбар: лого NeuroDifference + строка версии и счётчиков; группы: **RESEARCH** (Studies, Today, Citation, Map, Brain, Learn), **TOOLS** (Compounds, Stack, Calories, Protocol Log), **COMMUNITY** (Community, Posts, Notebook + badge‑счётчик), **SUPPORT** (Shop, Browse, Suggest), внизу **ACCOUNT**. Активный пункт — синяя подсветка.
+- Main‑область: overline‑метка, H1, подзаголовок, контент. На Studies и Brain — правый рельс фильтров со счётчиками. Модалки центрированы, фон dim+blur.
+
+## 5. Модули
+
+### 5.1 Studies (библиотека исследований)
+Строка поиска «Search studies, authors, journals…» + подсказка «Title, abstract, authors, journal, year, tags»; счётчик «N results · page X of Y». Сетка карточек: строка 1 — КАТЕГОРИЯ caps, бейдж года, quality dots, bookmark; заголовок; эксцерпт абстракта (clamp); chip‑теги (compound‑pathway, темы, популяции); футер: ссылка PubMed, «N min read», год; иногда thumbnail. Правый рельс: фильтры CATEGORY / COMPOUNDS / AUTHOR / STUDY TYPE (RCT, meta‑analysis, systematic review, clinical trial, comparative, multicenter, observational) / PATHWAY — все со счётчиками, пересчёт при клике. Клик по карточке → модалка «Journal article»: оверлайн (категория, год, dots, тип), действия (bookmark, copy, close), заголовок, табы **Full paper | Abstract | Details | Contribute | Comments | Video**, chips тегов, футер PubMed + read time, цитата: авторы, журнал, год;том(выпуск):страницы, PMID, PMCID, DOI‑ссылка.
+
+### 5.2 Today *(мин. спецификация)* — дневной дайджест: новые исследования за дату, группировка по категориям.
+### 5.3 Citation *(мин. спецификация)* — генератор цитат: выбор исследования, форматы APA/AMA/Vancouver/BibTeX/Markdown, копирование, экспорт .bib.
+
+### 5.4 Map (карта путей)
+Поиск «Search any compound, pathway or goal…», счётчик «N compounds · M pathways». Легенда из ~10 цветных групп целей (Muscle & Strength, Bone & Joints, Skin/Hair & Pigmentation, Hormones & Fertility, GH & IGF‑1, Metabolism & Fat Loss, Repair/Blood/Longevity, Brain & Cognition, Anti‑Inflammation, Immunity & Infection). Слева панель с табами **Goals (N) / Compounds / Pathways**, список целей, подсказка «Tap a goal or compound to see the pathway network». Центр — bipartite Sankey‑граф: колонка узлов‑соединений и колонка узлов‑мишеней/путей, кривые цветные связи; hover подсвечивает цепочку; выбор цели перестраивает граф; zoom/pan; клик узла → панель профиля со ссылками на исследования.
+
+### 5.5 Brain (3D‑атлас)
+Поиск «Search the brain atlas», счётчик «N targets · M regions». Контролы: View (Front/Top/Orbit/Fullscreen), тумблеры Color, Nodes, Rotate, Direction, Pulse, селект датасета. Сцена: полупрозрачный сагиттальный мозг, волоконные тракты линиями, светящиеся узлы рецепторов. Правый рельс RECEPTOR CLASS: GABA, GLUTAMATE (NMDA/AMPA/mGluR), CANNABINOID, MONOAMINES (D1–D5, 5‑HT1A/2A/2B/6/7, транспортеры), OPIOID, ACETYLCHOLINE, OTHER, TRACE AMINE — со счётчиками подтипов. Клик подтипа → список лигандов (агонист/антагонист) и исследований, подсветка региона.
+
+### 5.6 Learn (курсы)
+Шапка: overline «COURSE / NOOTROPICS», H1 «Learn the brain, one connection at a time.», подзаголовок; справа прогресс «0%», «N / M lessons», селект курса (Nootropics — 126 lessons; Anabolic steroids — 88 lessons). Слева: «YOUR CURRICULUM» — ветви (Foundations 6 concepts, Dopamine lifecycle 4, Dopamine receptors 3, Serotonin lifecycle 3, Serotonin receptors 3, Evidence & safety 3, Biosynthesis — enzyme lab 2 и др.) с прогрессом и блокировкой до прохождения пререквизитов. Центр: «BRANCH 01 · Foundations», кнопка Focus mode, табы **Lesson / Skill tree / Pathways / Compounds**, поиск по темам. Skill tree: «YOUR LEARNING PATH», переключатель Tree/List, узлы со статусами (available/locked/done). Страница урока: нумерованные секции с заголовками и абзацами; callout‑блок «THE CONNECTION TO KEEP: Neuron = cell. Neurotransmitter = messenger. Receptor = responder.»; блок «Sources & further reading · N references» с внешними ссылками и датой проверки; квиз «ONE QUICK CHECK» (вопрос, radio‑варианты A/B/C, кнопка Check answer, фидбек); правый рельс «LEADS TO» (следующие темы) и ссылка на skill tree. Прогресс сохраняется, ветви разблокируются.
+
+### 5.7 Compounds (справочник)
+Поиск «Search compounds — name, class, or what it does…». Chip‑категории со счётчиками (~19): Anabolic Steroids, CASBs, NRMAs/NK‑1 Antagonists, GH & Secretagogues, Peptides, GLP‑1 & Body, SGRMs & Growth Mods, Antibiotics & Support, Longevity & Metabolism, Nootropics & Cognition, Anti‑diabetics, Immunology & Biologics, Cardiovascular, Neurology & Psychiatry, Analgesia & Anesthesia, Gastrointestinal & Hepatic, Dermatology & Topicals, Oncology & Cytotoxics. Счётчик «N compounds · click any compound for the full breakdown», Sort (Name…), легенда «Human = human‑tested mechanisms · Preclinical = animal‑only», кнопка «+ Request a missing compound». Секции по классам (CAPS); сетка карточек: иконка, название (+синоним), описание 1–2 предложения, футер «N mechanisms», «N interactions», бейдж human/preclinical, ссылка «full profile». Профиль соединения: табы Overview / Mechanisms / Interactions / Dosing / Studies / Safety, структурная формула, списки мишеней и взаимодействий, ссылки на исследования.
+
+### 5.8 Stack *(мин. спецификация)* — конструктор стека: цель, добавление соединений, предупреждения о взаимодействиях (синергия/антагонизм/дубли), сводка доз и расписания, сохранение в Protocol Log.
+### 5.9 Calories *(мин. спецификация)* — калькулятор BMR/TDEE (Mifflin‑St Jeor), активности и цели, вывод макросов.
+### 5.10 Protocol Log *(мин. спецификация)* — личный журнал приёмов: дата, соединение, доза, заметки, таймлайн, экспорт.
+### 5.11 Community / 5.12 Posts *(мин. спецификация)* — форум и лента постов: категории, треды, ответы, голоса; шапка сообщества — «NeuroDifference community».
+
+### 5.13 Notebook (личная база знаний)
+Шапка: overline «YOUR PRIVATE KNOWLEDGE BASE», H1 «Research notebook», подзаголовок; кнопки «+ New note» и хоткей ⌘N. Слева: поиск «Search your notes», «All notes (N)», «Quote index (N)» (сохранённые цитаты из исследований). Редактор: заголовок; табы Markdown / Preview / Focus; тулбар B, I, code, H2, quote, list, tag; плейсхолдер «Start writing. Use Markdown for structure, #tags to organize ideas, and [[Note Title]] to connect your thinking.». Внизу: Tags — цветовые точки для окраски тегов; Tasks — чек‑листы; CONNECTED COMPOUNDS — автодетект названий соединений в тексте и связь со справочником. Wiki‑links `[[...]]` между заметками; badge в сайдбаре с числом заметок.
+
+### 5.14 Shop
+H1 «Shop», подзаголовок «Every variant available. Set shipping per group. Basket checkout, with confirmation and tracking by email.» Поиск, кнопка Cart. Категории‑табы со счётчиками: Nootropics, Anxiolytics, Anabolic, Peptides, Steroids, Research, Supplies & Media, Inhibitors, Supplements, Equipment, Coaching. Shipping groups: All groups, Group A: EU, Group B: US, Group C: RU, Group D: CA, Group E: AU (фильтр доступности). Sort (A‑Z, цена). Сетка товаров: изображение (структурная формула или фото), название, «N options», chip‑варианты (1 g, 10 g, 1 g powder…), цена, сток («93 in stock», «46 low in stock», «Minimum»), кнопка Add с иконкой корзины, «Ships to group X». Собственные бренд‑позиции с лейблом «NeuroDifference …». Корзина → checkout → email‑подтверждение и трекинг.
+
+### 5.15 Browse (живой PubMed)
+Поле запроса с dropdown‑подсказками и синтаксисом: `quote` exact phrase · `tag:` · `year:` · `journal:` · `author:` · `compound:` · exclude. Пояснение: «Search PubMed directly. Anything not already in the library can be suggested with one click; an admin categorizes and indexes it before it goes live for everyone.» Результаты: карточки (заголовок, авторы, журнал год;том(выпуск):страницы, эксцерпт, PMID, бейдж «Not in library» / «In library», кнопка «+» — предложить добавление). Предложение падает в админ‑очередь.
+
+### 5.16 Suggest *(мин. спецификация)* — форма предложения (compound/study/product): имя, ссылка, комментарий; статусы своих предложений.
+
+## 6. Модель данных (минимум)
+User; Study (pmid, doi, title, abstract, full_text, journal, year, volume, issue, pages, authors[], category, study_type, quality 1–5, tags[], compounds[], pathways[], read_minutes, thumb); Compound (name, synonyms, class, description, mechanisms[], interactions[], evidence, structure_img); Target/Mechanism; Pathway; Goal (color); GoalEdge (compound↔target, goal); BrainRegion; Receptor (class, subtype, region); Ligand (compound, receptor, action); Course, Branch, Lesson (sections[], callout, refs[], quiz); Progress; Note (title, markdown, tags[], tag_colors, links); Quote; Product (name, category, variants[], price, stock, ship_groups[], image); CartItem, Order; Thread/Post; Suggestion (type, payload, status); Comment; Bookmark.
+
+## 7. Сквозные механики
+Фасетный поиск с счётчиками и пересчётом; пагинация «N results · page X of Y»; bookmarks; quality dots; бейджи доказательности; модерационный поток пополнения библиотеки (Browse → «+» → админ категоризует → публикация); прогресс и блокировки уроков; wiki‑links и quote index; хоткеи (⌘N); toast‑уведомления; дисклеймер в футере; абстракты — собственные саммари или лицензионные данные, не копипаст охраняемого текста.
+
+## 8. Приёмочные сценарии (демо‑путь)
+1) Studies: поиск → фильтры рельса → модалка → таб Details с цитатой и DOI. 2) Compounds: chip категории → карточка → full profile. 3) Map: тап цели «Muscle» → Sankey‑граф подсвечен. 4) Brain: rotate/pulse → клик класса рецепторов → список лигандов. 5) Learn: урок → callout → квиз → прогресс. 6) Notebook: ⌘N → markdown → #tag → connected compounds. 7) Browse: запрос → «Not in library» → «+» → очередь модерации. 8) Shop: группа доставки → вариант → Add → checkout → email+трекинг.
+
+## 9. Роадмап
+Этапы: 1) каркас, дизайн‑система, auth, бренд‑ассеты NeuroDifference; 2) Studies + поиск/фильтры/модалка; 3) Compounds + профили; 4) Map‑граф; 5) Brain‑3D; 6) Learn; 7) Notebook; 8) Browse+Suggest+админка; 9) Shop+оплата; 10) Community/Posts/Today/Citation/Stack/Calories/Protocol Log.
